@@ -1,0 +1,22 @@
+# Cache Files
+__pycache__
+static
+.pytest_cache
+
+# Environments
+.vscode
+venv
+.env
+.*yml
+
+# Migrations
+migrations
+data
+media
+
+# Temp files
+*.pdf
+posts
+certbot
+*.sqlite3
+*.ini

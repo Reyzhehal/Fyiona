@@ -1,0 +1,59 @@
+version: "3.9"
+
+services:
+  web:
+    build:
+      context: ./fyiona/
+      dockerfile: Dockerfile
+    command: >
+      sh -c "python fyiona/manage.py collectstatic --noinput &&
+             python fyiona/manage.py makemigrations users &&
+             python fyiona/manage.py makemigrations posts &&
+            #  python fyiona/manage.py makemigrations stories &&
+            #  python fyiona/manage.py makemigrations umessages &&
+             python fyiona/manage.py migrate &&
+            #  python fyiona/manage.py createcachetable &&
+            #  python fyiona/manage.py createsuperuser --noinput &&
+             python fyiona/manage.py runserver 0.0.0.0:8080"
+    environment:
+      - ./.env
+    volumes:
+      - ./:/main
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+  nginx:
+    image: nginx:1.15-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./data/nginx:/etc/nginx/conf.d
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done &
+      nginx -g \"daemon off;\"'"
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h &
+      wait $${!}; done;'"
+  db:
+    image: postgres
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env
+    ports:
+      - "5432:5432"
+    expose:
+      - 5432
+    restart: always
+
+volumes:
+  db_data: null

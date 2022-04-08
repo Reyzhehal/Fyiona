@@ -1,0 +1,1428 @@
+openapi: 3.0.0
+info:
+  description: |
+    Detailed API documentation for Fyiona website
+  version: "1.0.0"
+  title: Fyiona
+  termsOfService: 'http://fyiona.com/terms/'
+  contact:
+    email: p.programist.kg@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: accounts
+    description: Everything that relates to User management API is listed below
+
+components:
+  parameters:
+    acceessTokenParameter:
+      in: path
+      name: AccessToken
+      required: true
+      schema:
+        type: string
+      description: Access token allows to confirm the user's actions
+
+paths:
+  /api/v1/accounts/:
+    get:
+      tags:
+        - accounts
+      summary: Returns list of all users
+      parameters:
+        - name: Bearer token
+          description: Authorization parameter
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returns the list of all Users -> (UserProfile + User)
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                    "success": true,
+                    "result": [
+                        {
+                            "user_profile": {
+                                "avatar": slug,
+                                "biography": str,
+                                "business_account": bool
+                            },
+                            "email": str,
+                            "first_name": str,
+                            "last_name": str,
+                            "phone_number": str,
+                            "token_balance": float
+                        }
+                    ]
+                }
+        '403':
+          description: API returns 403 Error if credentials were provided incorrectly
+          content:
+            application/json:
+              schema:
+                type: object
+                example: [
+                  {
+                    "success": "False",
+                    "message": "Session has expired, please login again!"
+                  },
+                  {
+                    "success": "False",
+                    "error": "Invalid authentication. Could not decode token."
+                  }
+              ]
+  /api/v1/accounts/me/:
+    get:
+      tags:
+        - accounts
+      summary: Returns list of all users
+      parameters:
+        - name: Bearer token
+          in: query
+          description: Authorization parameter
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: This API returns information about currently authenticated user in JSON format
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                    "success": true,
+                    "result": {
+                        "user_profile": {
+                            "avatar": slug,
+                            "biography": str,
+                            "business_account": bool
+                        },
+                        "email": str,
+                        "first_name": str,
+                        "last_name": str,
+                        "phone_number": int,
+                        "token_balance": float,
+                        "date_joined": date
+                    }
+                }
+        '403':
+          description: API returns 403 Error if credentials were provided incorrectly
+          content:
+            application/json:
+              schema:
+                type: object
+                example: [
+                  {
+                    "success": "False",
+                    "message": "Session has expired, please login again!"
+                  },
+                  {
+                    "success": "False",
+                    "error": "Invalid authentication. Could not decode token."
+                  }
+              ]
+  /api/v1/accounts/search/by/email/:
+    get:
+      tags:
+        - accounts
+      summary: Search By Email API allows You to find all users whose email looks like the provided one
+      parameters:
+        - name: Bearer token
+          in: query
+          description: Authorization parameter
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: This API returns all users who have the same characters in the email field in the JSON format
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                    "success": true,
+                    "result": [
+                        {
+                            "user_profile": {
+                                "avatar": slug,
+                                "biography": str,
+                                "business_account": bool
+                            },
+                            "email": str,
+                            "first_name": str,
+                            "last_name": str,
+                            "phone_number": str,
+                            "token_balance": float
+                        }
+                    ]
+                }
+        '403':
+          description: API returns 403 Error if credentials were provided incorrectly
+          content:
+            application/json:
+              schema:
+                type: object
+                example: [
+                  {
+                    "success": "False",
+                    "message": "Session has expired, please login again!"
+                  },
+                  {
+                    "success": "False",
+                    "error": "Invalid authentication. Could not decode token."
+                  }
+              ]
+        '400':
+          description: API returns 403 Error if credentials were provided incorrectly
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                  "success": false,
+                  "result": "The \"email\" query parameter was not provided!"
+                }
+              
+  /api/v1/accounts/search/by/phone/:
+    get:
+      tags:
+        - accounts
+      summary: Search By Email API allows You to find all users whose Phone Number looks like the provided one
+      parameters:
+        - name: Bearer token
+          in: query
+          description: Authorization parameter
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: This API returns all users who have the same characters in the Phone NUmber field in the JSON format
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                    "success": true,
+                    "result": [
+                        {
+                            "user_profile": {
+                                "avatar": slug,
+                                "biography": str,
+                                "business_account": bool
+                            },
+                            "email": str,
+                            "first_name": str,
+                            "last_name": str,
+                            "phone_number": str,
+                            "token_balance": float
+                        }
+                    ]
+                }
+        '403':
+          description: API returns 403 Error if credentials were provided incorrectly
+          content:
+            application/json:
+              schema:
+                type: object
+                example: [
+                  {
+                    "success": "False",
+                    "message": "Session has expired, please login again!"
+                  },
+                  {
+                    "success": "False",
+                    "error": "Invalid authentication. Could not decode token."
+                  }
+              ]
+        '400':
+          description: API returns 403 Error if credentials were provided incorrectly
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                  "success": false,
+                  "result": "The \"email\" query parameter was not provided!"
+                }
+
+  # /api/v1/accounts/email_reset/confirmation/:
+  #   get:
+  #     tags:
+  #       - accounts
+  #     summary: Changing user email when clicking on this URL.
+  #     description: This can only be done by the logged in user. This link is sent to the mail to the user who wants to change their email. When the user goes to this address, the user's email address changes.
+  #     operationId: ChangeEmaiToken
+  #     responses:
+  #       '400':
+  #         description: Bad request
+  #       '404':
+  #         description: Page not found
+  #       '200':
+  #         description: Successfully change email
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: object
+  # /api/v1/accounts/reset_password/:
+  #   get:
+  #     tags:
+  #       - accounts
+  #     summary: Send code for reset User's password
+  #     description: This can only be done by the logged in user.
+  #     operationId: SendPasswordResetToken
+  #     responses:
+  #       '400':
+  #         description: Bad request
+  #       '404':
+  #         description: Page not found
+  #       '200':
+  #         description: If the User has followed this link, a link to the password change API will be sent to his mail.
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: object
+  /api/v1/accounts/registration/confirmation/<str:token>/:
+    get:
+      tags:
+        - accounts
+      summary: The URL that has been sent to the provided Email will redirect a User to this API and automatically confirm his Email
+      operationId: EmailConfirmationUrl
+      responses:
+        '200':
+          description: Send email confirmation URl to User's email
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                  "success": true, 
+                  "result": "You email is confirmed. Now you can log in."
+                }
+        '403':
+          description: User is not logged in
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                  "success": false,
+                  "result": "Authentication credentials were not provided."
+                }
+  /api/v1/accounts/registration/:
+    post:
+      tags:
+        - accounts
+      summary: Returns access token after providing credentials. You can log in by 2 fields either email or phone_number(if provided)
+      operationId: registration
+      parameters:
+        - name: first_name
+          in: query
+          description: The First Name of User
+          required: true
+          schema:
+            type: string
+        - name: last_name
+          in: query
+          description: The Last Name of User
+          required: true
+          schema:
+            type: string
+        - name: email
+          in: query
+          description: The real email to confirm an account
+          required: true
+          schema:
+            type: string
+        - name: phone_number
+          in: query
+          description: The real phone number with country code to confirm an account
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Plain text more than 8 symbols
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful login
+          headers:
+            X-Rate-Limit:
+              description: 5 calls per hour allowed by the user
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: 1 month in UTC when token expires
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                    "success": true,
+                    "result": {
+                        "email": "user@example.com",
+                        "token": "<Access Token>"
+                    }
+                }
+        '400':
+          description: Invalid username/password supplied
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                  "success": [false],
+                  "result": ["Error message..."]
+                }
+  /api/v1/accounts/login/:
+    post:
+      tags:
+        - accounts
+      summary: Returns access token after providing credentials. You can log in by 2 fields either email or phone_number(if provided)
+      operationId: loginUser
+      parameters:
+        - name: email/phone_number
+          in: query
+          description: One of these fields allow to log in
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful login
+          headers:
+            X-Rate-Limit:
+              description: 5 calls per hour allowed by the user
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: 1 month in UTC when token expires
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                    "success": true,
+                    "result": {
+                        "email": "user@example.com",
+                        "token": "<Access Token>"
+                    }
+                }
+        '400':
+          description: Invalid username/password supplied
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                  "success": [false],
+                  "result": ["Error message..."]
+                }
+  /api/v1/accounts/password/reset/:
+    post:
+      tags:
+        - accounts
+      summary: User sends his email via POST request and receives reset token on Email
+      description: Send "email" parameter to this API and follow the link that You received on Email
+      operationId: CustomUserResetPassword
+      parameters:
+        - name: email
+          in: query
+          description: Confirmation code
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                  "success": true,
+                  "result": "The instructions to reset the password have been sent to Your email"
+                }
+        '404':
+          description: User is not logged in
+          content:
+            application/json:
+              schema:
+                type: object
+                example: [
+                  {
+                    "success": False,
+                    "result": "There is no user with such Email address!"
+                  }, {
+                    "success": False,
+                    "result": "\"email\" field is empty!"
+                  }
+                ]
+  /api/v1/accounts/password/reset/confirmation:
+    get:
+      tags:
+        - accounts
+      summary: Click on the Email's link and provide new Password
+      description: After You successfully fetched User's ID from GET response You substitute it for the PATCH request to update the User's password
+      operationId: GetResetTokenFromParameters
+      responses:
+        '400':
+          description: Bad request
+        '404':
+          description: Page not found
+        '200':
+          description: In case User followed the link that has been sent to his email he will successfully update his password
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                  "success": True,
+                  "result": "Password updated successfully",
+                }
+    put:
+      tags:
+        - accounts
+      summary: Reset User's password
+      description: You need to send 2 required parameters to reset the password successfully and login again
+      operationId: UpdatePasswordUsingTokenFromParameters
+      parameters:
+        - name: id
+          in: query
+          description: User's UUID from databse to define whose password need to change
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password that needs to be reseted
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: In case User followed the link that has been sent to his email he will successfully update his password
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                  "success": true,
+                  "result": "Password updated successfully",
+                }
+        '404':
+          description: Page not found
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                  "success": false,
+                  "result": "Invalid UUID, such user does not exist",
+                }
+
+  /api/v1/accounts/password/update/:
+    patch:
+      tags:
+        - accounts
+      summary: Update user password
+      description: This can only be done by the logged in user. After User chnaged his password he will be automatically logout.
+      operationId: updateUser
+      parameters:
+        - name: Bearer 
+          description: Authorization parameter
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: old_password
+          in: query
+          description: password that need to be updated
+          required: true
+          schema:
+            type: string
+        - name: new_password
+          in: query
+          description: password that need to be updated
+          required: true
+          schema:
+            type: string
+      responses:
+        '403':
+          description: User is not authenticated
+        '405':
+          description: Method Get is Not Allowed
+        '200':
+          description: Successfully changed password
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                  "success": true,
+                  "result": "Password updated successfully",
+                }
+
+  /api/v1/accounts/update/:
+    patch:
+      tags:
+        - accounts
+      summary: Update user profile
+      description: This operation can only be done by the logged in user only. It allows to update UserProfile info
+      operationId: updateUserProfile
+      parameters:
+        - name: Bearer 
+          description: Authorization parameter
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: first_name
+          in: query
+          description: first name that need to be updated
+          required: false
+          schema:
+            type: string
+        - name: last_name
+          in: query
+          description: last name that need to be updated
+          required: false
+          schema:
+            type: string
+        - name: avatar
+          in: query
+          description: phone number that need to be updated
+          required: false
+          schema:
+            type: string
+        - name: biography
+          in: query
+          description: user biography that need to be updated
+          required: false
+          schema:
+            type: string
+      responses:
+        '403':
+          description: User is not authenticated
+        '405':
+          description: Method Get is Not Allowed
+        '200':
+          description: Successfully updated profile
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                    "success": True,
+                    "result": "Data has been changed successfully",
+                }
+        '400':
+          description: Wrong field provided
+          content:
+            application/json:
+              schema:
+                type: object
+                example: [
+                  {
+                      "success": False,
+                      "result": "Wrong field - {key}",
+                  },
+                  {
+                      "success": False,
+                      "result": "Please provide at least on field to update",
+                  }
+              ]
+
+  /api/v1/accounts/delete:
+    get:
+      tags:
+        - accounts
+      summary: Confirm delete user profile
+      description: When user follows the link from his/her email the Access token is provided in the URL path.
+      operationId: deleteUserConfirmation
+      parameters:
+        - $ref: '#/components/parameters/acceessTokenParameter'
+      responses:
+        '403':
+          description: User is not authenticated
+        '405':
+          description: Method Get is Not Allowed
+        '200':
+          description: Successfully delete profile
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                    "success": True,
+                    "result": "Account succesfully deleted.",
+                }
+    delete:
+      tags:
+        - accounts
+      summary: Delete user profile
+      description: This can only be done by the logged in user.
+      operationId: deleteUser
+      parameters:
+        - name: Bearer token
+          in: query
+          description: Auth credentials to confirm deletion
+          required: true
+          schema:
+            type: string
+      responses:
+        '403':
+          description: User is not authenticated
+        '405':
+          description: Method Get is Not Allowed
+        '200':
+          description: Successfully delete profile
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                    "success": True,
+                    "result": "Account succesfully deleted.",
+                }
+  /api/v1/posts/details/<int:pk>/:
+    get:
+      tags:
+        - post
+      summary: Gives detailed information about a post with comments from this post
+      responses:
+        "200":
+          description: successfully operation
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+    "success": true,
+    "result": {
+        "id": "integer",
+        "author": {
+            "id": "UUID",
+            "first_name": "string",
+            "last_name": "string",
+            "email": "string",
+            "phone_number": "string",
+            "user_profile": {
+                "avatar": "string",
+                "biography": "string",
+                "amount_of_followers": "integer",
+                "amount_of_following": "integer",
+                "amount_of_posts": "integer",
+                "business_account": false
+            },
+            "token_balance": "integer"
+        },
+        "comments": [
+            {
+                "id": "integer",
+                "author": {
+                    "id": "UUID",
+                    "first_name": "string",
+                    "last_name": "string",
+                    "email": "string",
+                    "phone_number": "string",
+                    "user_profile": {
+                        "avatar": "string",
+                        "biography": "string",
+                        "amount_of_followers": "integer",
+                        "amount_of_following": "integer",
+                        "amount_of_posts": "integer",
+                        "business_account": "bool"
+                    },
+                    "token_balance": "integer"
+                },
+                "text": "string",
+                "created_at": "datetime",
+                "post": "integer",
+                "replies": "integer",
+                "likes": [
+                    "author": {
+                        "id": "UUID",
+                        "first_name": "string",
+                        "last_name": "string",
+                        "email": "string",
+                        "phone_number": "string",
+                        "user_profile": {
+                            "avatar": "string",
+                            "biography": "string",
+                            "amount_of_followers": "integer",
+                            "amount_of_following": "integer",
+                            "amount_of_posts": "integer",
+                            "business_account": "bool"
+                        },
+                        "token_balance": "integer"
+                    },
+                    "author": {
+                        "id": "UUID",
+                        "first_name": "string",
+                        "last_name": "string",
+                        "email": "string",
+                        "phone_number": "string",
+                        "user_profile": {
+                            "avatar": "string",
+                            "biography": "string",
+                            "amount_of_followers": "integer",
+                            "amount_of_following": "integer",
+                            "amount_of_posts": "integer",
+                            "business_account": "bool"
+                        },
+                        "token_balance": "integer"
+                    },
+                ]
+            }
+        ],
+        "post_file": "string",
+        "caption": "string",
+        "created_at": "datetime"
+    }
+}
+              
+  /api/v1/posts/create/:
+    post:
+      tags:
+      - post
+      summary: API accepts 1 required field "post_file" and 1 required parameter -> "Bearer token" for authorization
+      parameters:
+        - name: Bearer Token
+          in: query
+          description: Auth Bearer token
+          required: true
+          schema:
+            type: string
+      
+      requestBody:
+        description: The body is **form data** type
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {
+                "post_file": "bytes",
+              }
+      responses:
+        '200':
+          description: Successfully created post
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                    "success": true,
+                    "message": "Post has been created succesfully",
+                    "result": {
+                        "id": int,
+                        "author": {
+                            "first_name": "string",
+                            "last_name": "string",
+                            "email": "string",
+                            "phone_number": "string",
+                            "user_profile": {
+                                "avatar": "string",
+                                "biography": "string",
+                                "amount_of_followers": integer,
+                                "amount_of_following": integer,
+                                "amount_of_posts": integer,
+                                "business_account": bool
+                            },
+                            "token_balance": integer
+                        },
+                        "post_file": "string",
+                        "caption": "string",
+                        "amount_of_likes": integer,
+                        "amount_of_comments": integer,
+                        "created_at": "datetime"
+                    }
+                }
+                  
+        '400':
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                            "success": false,
+                            "result": ["Error message..."]
+                        }
+        '403':
+          description: User is not logged in
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                    "detail": "Authentication credentials were not provided."
+                }
+        '405':
+          description: Wrong HTTP request
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+    "detail": "Method \"METHOD\" not allowed."
+} 
+                
+                        
+  /api/v1/posts/update/<int:pk>/:
+    patch:
+      tags:
+        - post
+      summary: Update post
+      description: This can only be done by the logged in user. Partual update. 
+      operationId: updatePost
+      parameters:
+        - name: Bearer Token
+          in: query
+          description: Auth Bearer token
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: API allows to update ONLY "caption" of a Post and accepts **JSON**
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {
+                "caption": "string",
+              }
+      responses:
+        '200':
+          description: Successful update post
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                            "success": true,
+                            "result": "Post has been updated successfully"
+                        }
+                  
+        '400':
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                            "success": false,
+                            "result": ["Error message..."]
+                        }
+        '403':
+          description: User is not logged in
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                            "success": false,
+                            "result": "Authentication credentials were not provided."
+                        }
+  /api/v1/posts/delete/<int:pk>/:
+    delete:
+      tags:
+        - post
+      summary: Delete post
+      description: This can only be done by the logged in user.
+      operationId: deletePost
+      parameters:
+        - name: token
+          in: query
+          description: Bearer token
+          required: true
+          schema:
+            type: string
+      responses:
+        '403':
+          description: User is not authenticated
+        '405':
+          description: Method Get is Not Allowed
+        '200':
+          description: Successfully delete post
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                            "success": True,
+                            "result": "Post succesfully deleted.",
+                        }
+  /api/v1/posts/comments/create/:
+    post:
+      tags:
+        - comment
+      summary: Returns access token after providing credentials
+      description: This can only be done by the logged in user.
+      operationId: createComment
+      parameters:
+        - name: Bearer token
+          in: query
+          description: Auth credential to create a comment
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: TEXT field is just the comment's text and POST field is just ID of a Post
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {
+                "text": "string",
+                "post": "integer"
+              }
+      responses:
+        '200':
+          description: Successful created comment
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                            "success": true,
+                            "result": "Comment has been created succesfully"
+                        }
+                  
+        '400':
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                            "success": false,
+                            "result": ["Error message..."]
+                        }
+        '403':
+          description: User is not logged in
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                            "success": false,
+                            "result": "Authentication credentials were not provided."
+                        }
+  /api/v1/stories/<uuid:pk>/:
+    get:
+      tags:
+        - story
+      summary: Provide UUID to get stories of a User
+      responses:
+        "200":
+          description: Returns list of all stories of specific User
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+    "success": true,
+    "result": [
+        {
+            "id": 1,
+            "viewers": [
+                {
+                    "id": "1f82b854-beb1-40fe-8794-3d4d2934165b",
+                    "email": "azatot@gmail.com",
+                    "token_balance": 0,
+                    "first_name": "Konstantin",
+                    "last_name": "Hoffman",
+                    "phone_number": "+996550123456",
+                    "phone_number_confirmed": false,
+                    "date_joined": "2021-10-08",
+                    "user_profile": {
+                        "avatar": "/media/default_profile_image.png",
+                        "biography": "I am cool person!",
+                        "business_account": false
+                    }
+                },
+                {
+                    "id": "b97e0c30-f965-4508-9ab8-7398ad1bb1dd",
+                    "email": "test@gmail.com",
+                    "token_balance": 0,
+                    "first_name": "John",
+                    "last_name": "Doe",
+                    "phone_number": "+996550123458",
+                    "phone_number_confirmed": false,
+                    "date_joined": "2021-10-11",
+                    "user_profile": {
+                        "avatar": "/media/default_profile_image.png",
+                        "biography": "I am cool person!",
+                        "business_account": false
+                    }
+                }
+            ],
+            "story_file": "/media/accounts/stories/StorySaver_zeegeeeeeee_34778268_1704800066264231_6252031487375917231.mp4",
+            "reaction": "",
+            "allow_message_replies": "Everyone",
+            "save_story_to_gallery": false,
+            "save_story_to_archive": true,
+            "allow_to_share": true,
+            "allow_sharing_messages": false,
+            "author": "1f82b854-beb1-40fe-8794-3d4d2934165b",
+            "hidden_story_from": [
+                "1f82b854-beb1-40fe-8794-3d4d2934165b",
+                "b97e0c30-f965-4508-9ab8-7398ad1bb1dd"
+            ]
+        },
+        {
+            "id": 2,
+            "viewers": [],
+            "story_file": "/media/accounts/stories/Simple_Monocolor_Travel_Logo.png",
+            "reaction": "Like",
+            "allow_message_replies": "Everyone",
+            "save_story_to_gallery": false,
+            "save_story_to_archive": false,
+            "allow_to_share": false,
+            "allow_sharing_messages": false,
+            "author": "1f82b854-beb1-40fe-8794-3d4d2934165b",
+            "hidden_story_from": []
+        }
+    ]
+}
+  /api/v1/stories/:
+    post:
+      tags:
+      - story
+      summary: API accepts 1 required field "post_file" and 1 required parameter -> "Bearer token" for authorization
+      parameters:
+        - name: Bearer Token
+          in: query
+          description: Auth Bearer token
+          required: true
+          schema:
+            type: string
+      
+      requestBody:
+        description: The body is **form data** type
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {
+                "post_file": "bytes",
+              }
+      responses:
+        '200':
+          description: Successfully created post
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                    "success": true,
+                    "message": "Post has been created succesfully",
+                    "result": {
+                        "id": int,
+                        "author": {
+                            "first_name": "string",
+                            "last_name": "string",
+                            "email": "string",
+                            "phone_number": "string",
+                            "user_profile": {
+                                "avatar": "string",
+                                "biography": "string",
+                                "amount_of_followers": integer,
+                                "amount_of_following": integer,
+                                "amount_of_posts": integer,
+                                "business_account": bool
+                            },
+                            "token_balance": integer
+                        },
+                        "post_file": "string",
+                        "caption": "string",
+                        "amount_of_likes": integer,
+                        "amount_of_comments": integer,
+                        "created_at": "datetime"
+                    }
+                }
+                  
+        '400':
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                            "success": false,
+                            "result": ["Error message..."]
+                        }
+        '403':
+          description: User is not logged in
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                    "detail": "Authentication credentials were not provided."
+                }
+        '405':
+          description: Wrong HTTP request
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+    "detail": "Method \"METHOD\" not allowed."
+} 
+    delete:
+      tags:
+        - story
+      summary: Delete post
+      description: This can only be done by the logged in user.
+      operationId: deleteStory
+      parameters:
+        - name: token
+          in: query
+          description: Bearer token
+          required: true
+          schema:
+            type: string
+      responses:
+        '403':
+          description: User is not authenticated
+        '405':
+          description: Method Get is Not Allowed
+        '200':
+          description: Successfully delete post
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                            "success": True,
+                            "result": "Story succesfully deleted.",
+                        }
+  /api/v1/messages/:
+    post:
+      tags:
+      - messages
+      summary: To create message, you need to be logged in, please provide Bearer token
+      operationId: CreateMessage
+      parameters:
+        - name: Bearer Token
+          in: query
+          description: Auth Bearer token
+          required: true
+          schema:
+            type: string
+      
+      requestBody:
+        description: API might accept a message_session field and assign a new meesage to specific message_session or create a new one
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {
+                "text": "bytes",
+                "receiver": "uuid",
+                "attachments": "bytes",
+                "message_session": "UUID"
+              }
+      responses:
+        '201':
+          description: Object returned in case of successful creation
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                            "success": true,
+                            "result": "Message has been created successfully"
+                        }
+        '400':
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                            "success": false,
+                            "result": ["Error message..."]
+                        }
+        '403':
+          description: User is not logged in
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                    "detail": "Authentication credentials were not provided."
+                }
+        '405':
+          description: Wrong HTTP request
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {"detail": "Method \"METHOD\" not allowed."} 
+    delete:
+      tags:
+        - messages
+      summary: Unsent message
+      description: This can only be done by the logged in user and the author of message
+      operationId: DeleteMessage
+      parameters:
+        - name: token
+          in: query
+          description: Bearer token
+          required: true
+          schema:
+            type: string
+      responses:
+        '403':
+          description: User is not authenticated
+        '405':
+          description: Method Get is Not Allowed
+        '200':
+          description: Successfully deleted message
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                            "success": True,
+                            "result": "Story succesfully deleted.",
+                        }
+  /api/v1/messages/sessions/:
+    get:
+      tags:
+      - sessions
+      summary: Get all MessageSessions of a User
+      operationId: GetAllMessagesSessionOfUser
+      parameters:
+        - name: Bearer Token
+          in: query
+          description: Auth Bearer token
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Object returned in case of successful creation
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                  "success": true,
+                  "result": [
+                      {
+                          "session": "a4b617ed-b862-4c8d-861c-3030c150d2e6",
+                          "participants": [
+                              "0e8f726d-975c-4460-a81d-4012e3d1e3b0",
+                              "8adacc04-3dca-4700-af37-98888ed90875"
+                          ],
+                          "session_messages": []
+                      },
+                      {
+                          "session": "be03c4f4-d3f0-41b8-9560-0402db415399",
+                          "participants": [
+                              "0e8f726d-975c-4460-a81d-4012e3d1e3b0",
+                              "8adacc04-3dca-4700-af37-98888ed90875"
+                          ],
+                          "session_messages": [
+                              {
+                                  "id": 73,
+                                  "attachments": {
+                                      "id": 74,
+                                      "attachment": "/media/messages/attachments/Screenshot_from_2021-10-28_14-49-54_GVjg60A.png"
+                                  },
+                                  "message_session": "Session ID: be03c4f4-d3f0-41b8-9560-0402db415399",
+                                  "updated_at": "2021-10-30T03:56:18.273442Z",
+                                  "created_at": "2021-10-30T03:56:18.273459Z",
+                                  "text": "Hello Mario!",
+                                  "reaction": null,
+                                  "is_read": false,
+                                  "sender": "8adacc04-3dca-4700-af37-98888ed90875",
+                                  "receiver": "0e8f726d-975c-4460-a81d-4012e3d1e3b0"
+                              }
+                          ]
+                      }
+                    ]
+                  }
+        '401':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                            "success": false,
+                            "result": ["Error message..."]
+                        }
+        '405':
+          description: Wrong HTTP request
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {"detail": "Method \"METHOD\" not allowed."}
+    delete:
+      tags:
+      - sessions
+      summary: Delete a chat of user
+      responses:
+        '200':
+          description: Object deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                            "success": false,
+                            "result": ["Error message..."]
+                        }
+        '405':
+          description: Wrong HTTP request
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {"detail": "Method \"METHOD\" not allowed."}
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/P-Programist/Fyiona/1.0.0
